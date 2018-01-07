@@ -15,6 +15,7 @@ use Faker\Generator as Faker;
 
 $factory->define(App\User::class, function (Faker $faker) {
     static $password;
+	$faker->locale = "vi_VN";
 
     return [
         'name' => $faker->name,
@@ -25,14 +26,28 @@ $factory->define(App\User::class, function (Faker $faker) {
 });
 
 $factory->define(App\Thread::class, function(Faker $faker){
+	$faker->locale = "vi_VN";
 	return [
 		'user_id'=>function(){
 			return factory('App\User')->create()->id;
+		},
+		'channel_id'=>function(){
+			return factory('App\Channel')->create()->id;
 		},
 		'title'=>$faker->sentence,
 		'body'=>$faker->paragraph
 	];
 });
+
+$factory->define(App\Channel::class, function(Faker $faker){
+	$faker->locale = "vi_VN";
+	$name = $faker->word;
+	return [
+		'name'=>$name,
+		'slug'=>$name,
+	];
+});
+
 $factory->define(App\Reply::class, function(Faker $faker){
 	return [
 		'thread_id'=>function(){

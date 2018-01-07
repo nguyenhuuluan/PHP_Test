@@ -13,26 +13,21 @@ class CreateThreadsTest extends TestCase
 
 	/** @test */
 	function guests_may_not_create_threads(){
-		$this->expectException('Illuminate\Auth\AuthenticationException');
+		//$this->expectException('Illuminate\Auth\AuthenticationException');
 
 		//$thread = factory('App\Thread')->make();
-		$thread = make('App\Thread');
+		//$thread = make('App\Thread');
 
 
-    	$this->post('/threads', $thread->toArray());
+
+    	$this->withExceptionHandling();
+        $this->post('/threads')
+            ->assertRedirect('/login');
+
+        $this->get('/threads/create')
+            ->assertRedirect('/login');
 
 	}	
-    
-
-    /** @test*/
-    function guests_cannot_see_create_thread_page()
-    {
-        /*$this->get('/threads/create')
-            ->assertRedirect('/login');*/
-        $this->withExceptionHandling()
-            ->get('/threads/create')
-            ->assertRedirect('/login');
-    }
 
     /** @test*/
     function an_authenticated_user_can_create_new_forum_threads(){
@@ -42,13 +37,22 @@ class CreateThreadsTest extends TestCase
 
 
     	// When we hit the endpoint to create a new threadd
-    	$thread = make('App\Thread');
+    	$thread = create('App\Thread');
     	//$thread = factory('App\Thread')->make();
     	$this->post('/threads', $thread->toArray());
+
+        //dd($thread->path());
     	//Then, when we visit the thread page
     	$response = $this->get($thread->path());
     	// We show see the new thread
     	$response->assertSee($thread->title)
     		->assertSee($thread->body);
+    }
+
+    /** @test */
+    function a_thread_belongs_to_a_channel()
+    {
+        $thread = create('App\Thread');
+        $this->assertInstanceOf('App\Channel', $thread->channel);
     }
 }

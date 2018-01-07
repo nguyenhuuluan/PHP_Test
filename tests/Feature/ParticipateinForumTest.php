@@ -15,11 +15,14 @@ class ParticipateinForum extends TestCase
 	function unauthenticated_user_may_not_add_replies(){
 
 		// kiem tra loi co fai loi Illuminate\Auth\AuthenticationException  khi them ko?
-		$this->expectException('Illuminate\Auth\AuthenticationException');
-   		$thread = factory('App\Thread')->create();
-		$reply = factory('App\Reply')->create();
+		//$this->expectException('Illuminate\Auth\AuthenticationException');
+
+   		// $thread = factory('App\Thread')->create();
+		   //  $reply = factory('App\Reply')->create();
    		//$this->post($thread->path().'/replies', $reply->toArray());
-   		$this->post('threads/1/replies', []);
+   		$this->withExceptionHandling()
+            ->post('threads/some-channel/1/replies', [])
+            ->assertRedirect('/login');
 	}
 
     /** @test*/
