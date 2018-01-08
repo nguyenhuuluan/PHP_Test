@@ -59,5 +59,17 @@ function a_user_can_read_replies_that_are_associated_with_a_thread(){
             ->assertDontSee($threadNotInChannel->title);
     }
 
+    /** @test */
+    function a_user_can_filter_threads_by_any_username()
+    {
+        $this->signIn(create('App\User', ['name'=>'JohnDoe']));
+        $threadByJohn =create('App\Thread', ['user_id'=>auth()->id()]);
+        $threadNotJohn = create('App\Thread');
+
+        $this->get('threads?by=JohnDoe')
+            ->assertSee($threadByJohn->title)
+            ->assertDontSee($threadNotJohn->title);
+    }
+
 
 }
