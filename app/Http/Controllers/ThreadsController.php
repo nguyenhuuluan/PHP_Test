@@ -108,7 +108,14 @@ class ThreadsController extends Controller
      */
     public function show($channelId,Thread $thread)
     {
-        return view('threads.show', compact('thread'));
+        //return $thread->load('replies');
+        //return Thread::withCount('replies')->find(51);
+        //return $thread->replyCount;
+        return view('threads.show', [
+
+            'thread'=>$thread,
+            'replies'=>$thread->replies()->paginate(1),
+        ]);
     }
 
     /**
