@@ -26,4 +26,13 @@ class FavoritesController extends Controller
 
         return back();
     }
+
+    public function loginRedirect(Replies $replies)
+    {
+
+        $thread = Thread::where('id', $replies->thread_id)->get();
+
+        return redirect('threads/'.$thread[0]->channel->name.'/'.$thread[0]->id);
+
+    }
 }
